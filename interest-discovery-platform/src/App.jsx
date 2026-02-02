@@ -7,6 +7,7 @@ import LoginSelection from './components/LoginSelection'
 import ProfileSetup from './components/ProfileSetup'
 import AdultLogin from './components/AdultLogin'
 import AdultDashboard from './components/AdultDashboard'
+import ProfileModal from './components/ProfileModal'
 import { MOCK_USER_HISTORY } from './data/userHistory'
 import { useAuth } from './context/AuthContext'
 
@@ -20,6 +21,7 @@ function App() {
     // App Content State
     const [selectedInterestIds, setSelectedInterestIds] = useState([])
     const [screen, setScreen] = useState('discovery') // 'discovery', 'deepening', 'hub'
+    const [showProfile, setShowProfile] = useState(false)
 
     // Restore state for returning students
     useEffect(() => {
@@ -89,29 +91,52 @@ function App() {
 
     // 3. Authenticated: Student / Guest App
     return (
-        <div className="app-container" style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', paddingBottom: '100px' }}>
+        <div className="container animate-fade-in" style={{ paddingBottom: '100px' }}>
 
             {/* Header / Avatar */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                    <div style={{ opacity: 0.5, fontSize: '0.9rem' }}>
-                        Explorer: <strong>{user.name}</strong> {user.role === ROLES.GUEST && '(Guest)'}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem 0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div
+                        onClick={() => alert('Profile Modal Coming Soon!')}
+                        style={{
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '50%',
+                            background: 'var(--gradient-main)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            cursor: 'pointer',
+                            transition: 'transform 0.2s'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
+                        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                    >
+                        <span style={{ fontSize: '1.2rem', fontWeight: 800 }}>{user.name.charAt(0)}</span>
                     </div>
-                    {user.shareCode && (
-                        <div style={{
-                            background: 'var(--bg-card)',
-                            padding: '0.25rem 0.5rem',
-                            borderRadius: '4px',
-                            border: '1px dashed var(--text-muted)',
-                            fontSize: '0.8rem',
-                            color: 'var(--text-muted)',
-                            fontFamily: 'monospace'
-                        }}>
-                            Code: <strong>{user.shareCode}</strong>
+                    <div>
+                        <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>
+                            {user.name} {user.role === ROLES.GUEST && '(Guest)'}
                         </div>
-                    )}
+                        {user.shareCode && (
+                            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
+                                Code: {user.shareCode}
+                            </div>
+                        )}
+                    </div>
                 </div>
-                <button onClick={handleLogout} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '0.9rem' }}>
+                <button
+                    onClick={handleLogout}
+                    className="hover-lift"
+                    style={{
+                        background: 'rgba(255,255,255,0.05)',
+                        padding: '0.5rem 1rem',
+                        borderRadius: 'var(--radius-sm)',
+                        color: 'var(--text-muted)',
+                        fontSize: '0.85rem',
+                        fontWeight: 500
+                    }}
+                >
                     Logout
                 </button>
             </div>
@@ -127,6 +152,14 @@ function App() {
                     }
                 </p>
             </header>
+
+            {/* Profile Modal */}
+            {showProfile && (
+                <ProfileModal
+                    user={{ ...user, selectedInterestIds }}
+                    onClose={() => setShowProfile(false)}
+                />
+            )}
 
             {/* Content Switcher */}
             {screen === 'hub' && user.role === ROLES.STUDENT && (
