@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Premium Color Palette */
+  --primary-accent: #6C5DD3; /* Vibrant Purple */
+  --secondary-accent: #00D2D3; /* Cyan Turquoise */
+  --highlight-color: #FF6B6B; /* Soft Red/Pink for accents */
+  
+  --bg-dark: #1F1D2B;
+  --bg-card: #252836;
+  --bg-card-hover: #2D303E;
+  
+  --text-main: #FFFFFF;
+  --text-muted: #B7B9D2;
+  
+  /* Gradients */
+  --gradient-main: linear-gradient(135deg, #6C5DD3 0%, #8E2DE2 100%);
+  --gradient-card: linear-gradient(180deg, rgba(37, 40, 54, 1) 0%, rgba(37, 40, 54, 0.8) 100%);
+  --gradient-glass: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  
+  /* Effects */
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.2);
+  --shadow-glow: 0 0 20px rgba(108, 93, 211, 0.4);
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  
+  /* Transitions */
+  --ease-spring: cubic-bezier(0.43, 0.13, 0.23, 0.96);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-card-hover);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-accent);
+}
