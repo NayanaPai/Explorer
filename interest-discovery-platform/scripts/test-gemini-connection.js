@@ -35,7 +35,7 @@ async function runDiagnosis() {
     console.log(`API Key detected: ${API_KEY.slice(0, 4)}...${API_KEY.slice(-4)}`);
 
     // 1. Test the requested model
-    const v3 = await testModel("gemini-3.0-pro");
+    const v3 = await testModel("gemini-1.5-pro");
 
     // 2. Test the fallback/stable model
     if (!v3) {
