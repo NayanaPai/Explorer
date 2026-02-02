@@ -180,7 +180,7 @@ const ExplorationHub = ({ selectedIds }) => {
 };
 
 const PillarCard = ({ title, subtitle, icon: Icon, color, content, children, isLoading, badge }) => (
-    <div style={{
+    <div className="hover-lift" style={{
         background: 'var(--bg-card)',
         borderRadius: 'var(--radius-lg)',
         overflow: 'hidden',
@@ -190,10 +190,7 @@ const PillarCard = ({ title, subtitle, icon: Icon, color, content, children, isL
         flexDirection: 'column',
         height: '100%',
         position: 'relative'
-    }}
-        onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-5px)'}
-        onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-    >
+    }}>
         <div style={{ background: color, padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
                 <h3 style={{ color: 'white', fontSize: '1.25rem' }}>{title}</h3>

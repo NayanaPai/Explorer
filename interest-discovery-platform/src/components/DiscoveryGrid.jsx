@@ -4,7 +4,7 @@ import InterestCard from './InterestCard';
 
 const DiscoveryGrid = ({ selectedIds, toggleInterest }) => {
     return (
-        <div style={{
+        <div className="container animate-fade-in" style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
             gap: '1.5rem',

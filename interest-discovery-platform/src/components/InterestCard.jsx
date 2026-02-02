@@ -23,7 +23,7 @@ const InterestCard = ({ interest, isSelected, onClick }) => {
                 position: 'relative',
                 overflow: 'hidden'
             }}
-            className="interest-card"
+            className="interest-card hover-lift"
         >
             {/* Background Glow Effect */}
             <div
