@@ -21,6 +21,7 @@ export const CurationAgent = {
             if (GeminiService.isAvailable()) {
                 console.log(`CurationAgent: Requesting live curation for ${title}...`);
                 const curatedData = await GeminiService.curateFullInterestPackage(topicId, title);
+                console.log(`CurationAgent: Successfully received live data for ${title}`);
 
                 // Add "Trust Badge" metadata
                 return {
@@ -28,6 +29,8 @@ export const CurationAgent = {
                     _source: 'LIVE_AGENT',
                     _trustScore: 98
                 };
+            } else {
+                console.warn("CurationAgent: GeminiService reports API NOT available (Missing Key).");
             }
         } catch (error) {
             console.error("CurationAgent: Live curation failed. Falling back to knowledge graph.", error);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { INTERESTS } from '../data/interests';
 import { getHubContent } from '../data/hubContent';
 import { ContentService } from '../services/contentService';
+import { CurationAgent } from '../agent/curationAgent';
 import { BookOpen, Zap, Eye, MessageSquare, Sparkles, CheckCircle, Info } from 'lucide-react';
 
 const ExplorationHub = ({ selectedIds }) => {
@@ -18,16 +19,22 @@ const ExplorationHub = ({ selectedIds }) => {
     useEffect(() => {
         const fetchContent = async () => {
             setLoading(true);
-            setShowProof(false); // Reset proof view on change
+            setAiContent(null); // Clear previous content
+            setShowProof(false);
 
-            // Use the new Agent!
-            const { CurationAgent } = await import('../agent/curationAgent');
-            const data = await CurationAgent.ask(activeInterestId);
-
-            setAiContent(data);
-            setLoading(false);
+            console.log(`ExplorationHub: Fetching live curation for ${activeInterestId}...`);
+            try {
+                const data = await CurationAgent.ask(activeInterestId);
+                setAiContent(data);
+            } catch (err) {
+                console.error("ExplorationHub: CurationAgent failed", err);
+            } finally {
+                setLoading(false);
+            }
         };
-        fetchContent();
+        if (activeInterestId) {
+            fetchContent();
+        }
     }, [activeInterestId]);
 
     return (

@@ -26,7 +26,15 @@ export const GeminiService = {
         }
 
         try {
-            const model = genAI.getGenerativeModel({ model: "gemini-3.0-pro" });
+            console.log("GeminiService: Generating recommendations...");
+            // Try 1.5 Flash first (Available & Fast)
+            let model;
+            try {
+                model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            } catch (e) {
+                console.warn("GeminiService: 1.5 Flash failed, trying gemini-pro...");
+                model = genAI.getGenerativeModel({ model: "gemini-pro" });
+            }
 
             const prompt = `
             You are an expert Educational Coach AI. 
@@ -62,7 +70,8 @@ export const GeminiService = {
             return JSON.parse(jsonStr);
 
         } catch (error) {
-            console.error("Gemini API Error:", error);
+            console.error("Gemini API Error (Recommendations):", error);
+            // If both failed, rethrow
             throw error;
         }
     },
@@ -78,7 +87,15 @@ export const GeminiService = {
         }
 
         try {
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+            console.log(`GeminiService: Curating content for ${title}...`);
+
+            // Try 1.5 Flash first
+            let model;
+            try {
+                model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            } catch (e) {
+                model = genAI.getGenerativeModel({ model: "gemini-pro" });
+            }
 
             const prompt = `
             You are a "Platform Sourcing Agent" for a Children's Interest Discovery Platform.
@@ -130,6 +147,10 @@ export const GeminiService = {
 
         } catch (error) {
             console.error("Gemini Curation Error:", error);
+            // Check for 404/not found specifically and maybe try one last gasp?
+            if (error.message.includes('not found')) {
+                console.error("Critical Model 404: The requested Gemini models are not enabled for this API Key.");
+            }
             throw error;
         }
     }
