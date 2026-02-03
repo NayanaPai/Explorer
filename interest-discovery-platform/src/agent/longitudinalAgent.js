@@ -17,12 +17,12 @@ export const LongitudinalAgent = {
         // 1. Try Live Reasoning provided by Gemini 3.0 Pro
         try {
             if (GeminiService.isAvailable()) {
-                console.log("Using Live Gemini API for Longitudinal Analysis...");
+                console.log("LongitudinalAgent: Requesting Live Reasoning from Gemini...");
                 const liveRecs = await GeminiService.generateRecommendations(history);
                 // Tag them as Live
-                return liveRecs.map(r => ({ ...r, _source: 'LIVE (Gemini 3.0 Pro)' }));
+                return liveRecs.map(r => ({ ...r, _source: 'LIVE (Gemini)' }));
             } else {
-                console.warn("LongitudinalAgent: GeminiService is NOT available (Missing Key).");
+                console.warn("LongitudinalAgent: GeminiService reports API NOT available (Check .env).");
             }
         } catch (error) {
             console.error("LongitudinalAgent: Live API Call Failed. Details:", error);
