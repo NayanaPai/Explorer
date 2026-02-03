@@ -97,7 +97,7 @@ function App() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem 0' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div
-                        onClick={() => alert('Profile Modal Coming Soon!')}
+                        onClick={() => setShowProfile(true)}
                         style={{
                             width: '40px',
                             height: '40px',

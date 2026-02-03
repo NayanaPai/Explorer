@@ -130,50 +130,91 @@ const ExplorationHub = ({ selectedIds }) => {
                 gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
                 gap: '1.5rem'
             }}>
-                {/* LEARN Pillar (AI Powered) */}
+                {/* KNOWLEDGE Pillar */}
                 <PillarCard
-                    title="Learn"
+                    title="Knowledge"
                     subtitle="Build understanding"
                     icon={BookOpen}
                     color="#4CC9F0"
                     isLoading={loading}
-                    badge="AI Validated"
+                    badge={aiContent?._source === 'LIVE_AGENT' ? 'AI Validated' : 'Offline'}
                 >
-                    {loading ? <p>Asking the AI agent...</p> : (
+                    {loading ? <p>Researching vetted sources...</p> : (
                         <>
-                            <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', fontWeight: 700 }}>Overview</h4>
+                            <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', fontWeight: 700 }}>{aiContent.knowledge?.title || 'Overview'}</h4>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1rem', lineHeight: 1.5 }}>
-                                {aiContent.summary}
+                                {aiContent.knowledge?.summary || 'Information loading...'}
                             </p>
-                            <div style={{ background: '#f0f9ff', padding: '0.75rem', borderRadius: '8px', fontSize: '0.9rem', color: '#0369a1' }}>
-                                <strong>Fun Fact:</strong> {aiContent.funFact}
-                            </div>
+                            {aiContent.knowledge?.funFact && (
+                                <div style={{ background: 'rgba(76, 201, 240, 0.1)', padding: '0.75rem', borderRadius: '8px', fontSize: '0.9rem', color: '#4CC9F0', border: '1px solid rgba(76, 201, 240, 0.2)' }}>
+                                    <strong>Fun Fact:</strong> {aiContent.knowledge.funFact}
+                                </div>
+                            )}
                         </>
                     )}
                 </PillarCard>
 
-                {/* Other pillars remain legacy for now (Try, See, Ask) */}
+                {/* EVENTS Pillar */}
                 <PillarCard
-                    title="Try"
-                    subtitle="Take action"
-                    icon={Zap}
-                    color="#F72585"
-                    content={legacyContent.try}
-                />
-                <PillarCard
-                    title="See"
+                    title="Events"
                     subtitle="Build belief"
                     icon={Eye}
                     color="#7209B7"
-                    content={legacyContent.see}
-                />
+                    isLoading={loading}
+                    badge={aiContent?.events ? 'Live' : null}
+                >
+                    {loading ? <p>Looking for webinars & exhibits...</p> : aiContent.events ? (
+                        <>
+                            <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{aiContent.events.title}</h4>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1rem' }}>{aiContent.events.summary}</p>
+                            <div style={{ fontSize: '0.85rem', color: '#7209B7', fontWeight: 600 }}>
+                                📅 {aiContent.events.date}
+                            </div>
+                        </>
+                    ) : <p style={{ color: 'var(--text-muted)' }}>No live events found for this week.</p>}
+                </PillarCard>
+
+                {/* MENTORS Pillar */}
                 <PillarCard
-                    title="Ask"
+                    title="Mentors"
                     subtitle="Get guidance"
                     icon={MessageSquare}
                     color="#4361EE"
-                    content={legacyContent.ask}
-                />
+                    isLoading={loading}
+                    badge={aiContent?.mentors ? 'Experts' : null}
+                >
+                    {loading ? <p>Connecting with experts...</p> : aiContent.mentors ? (
+                        <>
+                            <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{aiContent.mentors.title}</h4>
+                            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '1rem' }}>{aiContent.mentors.bio}</p>
+                            <div style={{ background: 'rgba(67, 97, 238, 0.1)', padding: '0.4rem 0.8rem', borderRadius: '20px', fontSize: '0.8rem', display: 'inline-block', color: '#4361EE', fontWeight: 600 }}>
+                                Focus: {aiContent.mentors.expertise}
+                            </div>
+                        </>
+                    ) : <p style={{ color: 'var(--text-muted)' }}>Searching for role models...</p>}
+                </PillarCard>
+
+                {/* EXPERIMENTS Pillar */}
+                <PillarCard
+                    title="Experiments"
+                    subtitle="Take action"
+                    icon={Zap}
+                    color="#F72585"
+                    isLoading={loading}
+                    badge={aiContent?.experiments ? 'Safe' : null}
+                >
+                    {loading ? <p>Designing safety-first experiments...</p> : aiContent.experiments ? (
+                        <>
+                            <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{aiContent.experiments.title}</h4>
+                            <ul style={{ paddingLeft: '1.2rem', color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '1rem' }}>
+                                {aiContent.experiments.steps?.slice(0, 3).map((s, i) => <li key={i}>{s}</li>)}
+                            </ul>
+                            <div style={{ fontSize: '0.75rem', background: 'rgba(247, 37, 133, 0.1)', color: '#F72585', padding: '0.5rem', borderRadius: '4px', borderLeft: '3px solid #F72585' }}>
+                                ⚠️ {aiContent.experiments.safetyNote}
+                            </div>
+                        </>
+                    ) : <p style={{ color: 'var(--text-muted)' }}>No experiments available today.</p>}
+                </PillarCard>
             </div>
         </div>
     );

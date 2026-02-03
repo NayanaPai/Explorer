@@ -65,5 +65,72 @@ export const GeminiService = {
             console.error("Gemini API Error:", error);
             throw error;
         }
+    },
+
+    /**
+     * Curate Multi-Category Content (Platform Agent logic)
+     * Gather, verify, and structure knowledge from vetted sites.
+     */
+    curateFullInterestPackage: async (interestId, title) => {
+        if (!genAI) {
+            console.warn("Gemini API Key missing. Falling back to simulation.");
+            throw new Error("API_KEY_MISSING");
+        }
+
+        try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
+            const prompt = `
+            You are a "Platform Sourcing Agent" for a Children's Interest Discovery Platform.
+            
+            OBJECTIVE:
+            Research the topic "${title}" (ID: ${interestId}) and curate 4 actionable cards for a learner (Age 8-12).
+            
+            VETTED SOURCES (Only use these or similar trusted educational sites):
+            - NASA Kids Club
+            - National Geographic Kids
+            - Smithsonian Learning Lab
+            - PBS Kids / PBS LearningMedia
+            - BBC Bitesize
+            - Science News for Students
+            
+            REQUIREMENTS:
+            1. Categorize content into: KNOWLEDGE, EVENTS, MENTORS, EXPERIMENTS.
+            2. Language: Use "Grade 5" readability level. Simplify complex terms.
+            3. Safety: Ensure all experiments are safe for home with adult supervision.
+            
+            STRUCTURE:
+            Return exactly one JSON object with these keys:
+            {
+              "knowledge": { "title": "...", "summary": "...", "funFact": "...", "source": "..." },
+              "events": { "title": "...", "summary": "...", "date": "...", "link": "...", "source": "..." },
+              "mentors": { "title": "...", "bio": "...", "expertise": "...", "source": "..." },
+              "experiments": { "title": "...", "steps": ["...", "..."], "safetyNote": "...", "source": "..." },
+              "verificationLog": [
+                { "step": "Sourcing", "status": "Pass", "details": "Verified via [Source name]" },
+                ...
+              ]
+            }
+            `;
+
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text();
+
+            const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            const curatedData = JSON.parse(jsonStr);
+
+            // Add metadata
+            return {
+                ...curatedData,
+                lastUpdated: new Date().toISOString().split('T')[0],
+                sourceType: "Live Platform Agent (Gemini)",
+                interestId
+            };
+
+        } catch (error) {
+            console.error("Gemini Curation Error:", error);
+            throw error;
+        }
     }
 };
