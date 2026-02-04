@@ -21,7 +21,7 @@ export const GeminiService = {
 
     /**
      * Generate Longitudinal Recommendations
-     * @param {object} userHistory 
+     * @param {object} userHistory ~
      * @returns {Promise<Array>} List of recommendations
      */
     generateRecommendations: async (userHistory) => {
@@ -48,12 +48,12 @@ export const GeminiService = {
         };
 
         try {
-            console.log("GeminiService: Attempting recommendations with gemini-1.5-flash...");
-            return await runPrompt("gemini-1.5-flash");
+            console.log("GeminiService: Attempting recommendations with gemini-3-flash-preview...");
+            return await runPrompt("gemini-3-flash-preview");
         } catch (error) {
-            console.warn("GeminiService: gemini-1.5-flash failed, trying gemini-pro...", error.message);
+            console.warn("GeminiService: gemini-3-flash-preview failed, trying gemini-3-pro-preview...", error.message);
             try {
-                return await runPrompt("gemini-pro");
+                return await runPrompt("gemini-3-pro-preview");
             } catch (fallbackError) {
                 console.error("GeminiService: All models failed.", fallbackError.message);
                 throw fallbackError;
@@ -95,22 +95,22 @@ export const GeminiService = {
         };
 
         try {
-            console.log(`GeminiService: Curating ${title} with gemini-1.5-flash...`);
-            const data = await runCuration("gemini-1.5-flash");
+            console.log(`GeminiService: Curating ${title} with gemini-3-flash-preview...`);
+            const data = await runCuration("gemini-3-flash-preview");
             return {
                 ...data,
                 lastUpdated: new Date().toISOString().split('T')[0],
-                sourceType: "Live Agent (Flash)",
+                sourceType: "Live Agent (Flash 3)",
                 interestId
             };
         } catch (error) {
-            console.warn(`GeminiService: Flash failed for ${title}, trying gemini-pro...`, error.message);
+            console.warn(`GeminiService: Flash 3 failed for ${title}, trying gemini-3-pro-preview...`, error.message);
             try {
-                const data = await runCuration("gemini-pro");
+                const data = await runCuration("gemini-3-pro-preview");
                 return {
                     ...data,
                     lastUpdated: new Date().toISOString().split('T')[0],
-                    sourceType: "Live Agent (Pro Fallback)",
+                    sourceType: "Live Agent (Pro 3 Fallback)",
                     interestId
                 };
             } catch (fallbackError) {
