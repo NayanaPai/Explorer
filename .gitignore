@@ -26,3 +26,18 @@ dist-ssr
 .env
 .env.test
 .env.production
+
+# Playwright / Testing Artifacts
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+tests/
+playwright.config.js
+
+# Internal Demo / Temporary
+verify_gemini_3.js
+BACKEND_SPEC.md
+walkthrough.md
+task.md
+implementation_plan.md

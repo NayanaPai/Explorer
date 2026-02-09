@@ -79,44 +79,70 @@ const LoginSelection = ({ onSelectMethod, onGuestAccess }) => {
                 </button>
             </div>
 
-            {/* Guest Option */}
+            {/* Generic Student Option */}
             <div style={{ display: 'flex', gap: '1rem', flexDirection: 'column', alignItems: 'center' }}>
                 <button
                     onClick={onGuestAccess}
                     style={{
-                        background: 'transparent',
-                        border: '2px solid var(--text-muted)',
-                        color: 'var(--text-muted)',
-                        padding: '1rem 3rem',
+                        background: 'var(--gradient-main)',
+                        border: 'none',
+                        color: 'white',
+                        padding: '1.2rem 4rem',
                         borderRadius: 'var(--radius-lg)',
-                        fontSize: '1.1rem',
-                        fontWeight: 600,
+                        fontSize: '1.2rem',
+                        fontWeight: 700,
                         display: 'flex',
                         alignItems: 'center',
-                        gap: '0.5rem',
-                        transition: 'all 0.2s',
-                        cursor: 'pointer'
+                        gap: '0.75rem',
+                        transition: 'all 0.3s var(--ease-spring)',
+                        cursor: 'pointer',
+                        boxShadow: 'var(--shadow-glow)'
                     }}
+                    onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
+                    onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
                 >
-                    <User size={20} />
-                    Explore as Guest
+                    <User size={24} />
+                    Enter as Generic Student
                 </button>
 
-                <button
-                    onClick={() => onSelectMethod('adult')}
-                    style={{
-                        background: 'transparent',
-                        border: 'none',
-                        color: 'var(--text-muted)',
-                        padding: '0.5rem',
-                        fontSize: '0.9rem',
-                        textDecoration: 'underline',
-                        cursor: 'pointer',
-                        opacity: 0.8
-                    }}
-                >
-                    I am a Parent or Teacher
-                </button>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', opacity: 0.7 }}>
+                    No account needed for this hackathon demo!
+                </p>
+
+                <div style={{ marginTop: '2rem', display: 'flex', gap: '2rem' }}>
+                    <button
+                        onClick={() => onSelectMethod('adult')}
+                        style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: 'var(--text-muted)',
+                            padding: '0.5rem',
+                            fontSize: '0.9rem',
+                            textDecoration: 'underline',
+                            cursor: 'pointer',
+                            opacity: 0.8
+                        }}
+                    >
+                        I am a Parent or Teacher
+                    </button>
+
+                    <button
+                        onClick={() => onSelectMethod('mentor')}
+                        style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: '#4361EE',
+                            padding: '0.5rem',
+                            fontSize: '0.9rem',
+                            textDecoration: 'underline',
+                            cursor: 'pointer',
+                            opacity: 0.9,
+                            fontWeight: 600
+                        }}
+                    >
+                        I am a Mentor (SME)
+                    </button>
+                </div>
             </div>
         </div>
     );

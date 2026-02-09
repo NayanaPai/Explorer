@@ -45,7 +45,7 @@ const QuestionCard = ({ interest, question, onAnswer, onSkip, current, total }) 
                         border: '2px solid transparent',
                         padding: '1rem',
                         borderRadius: 'var(--radius-md)',
-                        color: 'white',
+                        color: 'var(--text-main)',
                         fontSize: '1.1rem',
                         fontWeight: 600,
                         transition: 'all 0.2s',
@@ -69,7 +69,7 @@ const QuestionCard = ({ interest, question, onAnswer, onSkip, current, total }) 
                         border: '2px solid transparent',
                         padding: '1rem',
                         borderRadius: 'var(--radius-md)',
-                        color: 'white',
+                        color: 'var(--text-main)',
                         fontSize: '1.1rem',
                         fontWeight: 600,
                         transition: 'all 0.2s'

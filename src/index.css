@@ -32,6 +32,30 @@
   --ease-spring: cubic-bezier(0.43, 0.13, 0.23, 0.96);
 }
 
+/* Light Theme Overrides */
+:root.light-theme {
+  --bg-dark: #F0F2F5;
+  /* Soft Gray/White */
+  --bg-card: #FFFFFF;
+  /* Pure White */
+  --bg-card-hover: #F8F9FA;
+  /* Slightly darker white */
+
+  --text-main: #2D3436;
+  /* Dark Gray for text */
+  --text-muted: #636E72;
+  /* Muted Gray */
+
+  /* Gradients - lighter, fresher */
+  --gradient-main: linear-gradient(135deg, #6C5DD3 0%, #a29bfe 100%);
+  --gradient-card: linear-gradient(180deg, #FFFFFF 0%, #FAFAFA 100%);
+  --gradient-glass: linear-gradient(145deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.4));
+
+  /* Effects - Softer shadows for light mode */
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-glow: 0 0 15px rgba(108, 93, 211, 0.2);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;

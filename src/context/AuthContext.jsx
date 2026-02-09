@@ -8,12 +8,14 @@ export const AuthProvider = ({ children }) => {
     // User State: null or { id, name, role, ... }
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [reflections, setReflections] = useState([]);
 
     // Roles
     const ROLES = {
         STUDENT: 'student',
         GUEST: 'guest',
-        ADULT: 'parent_teacher'
+        ADULT: 'parent_teacher',
+        MENTOR: 'mentor'
     };
 
     // Load from local storage on mount
@@ -29,16 +31,25 @@ export const AuthProvider = ({ children }) => {
         const newUser = { ...data, role };
         setUser(newUser);
 
-        // Only persist actual user profiles or returners, not pure sessions if we wanted transient
-        // But for this prototype, we persist everything except maybe adult mock
-        if (role !== ROLES.ADULT) {
-            localStorage.setItem('user_profile', JSON.stringify(newUser));
-        }
+        // Persist everything for the hackathon prototype to ensure a good demo experience
+        // Previously we skipped ADULT persisting, but let's keep everything for smoothness
+        localStorage.setItem('user_profile', JSON.stringify(newUser));
     };
 
     const logout = () => {
         setUser(null);
         localStorage.removeItem('user_profile');
+    };
+
+    const addReflection = (reflection) => {
+        setReflections(prev => [
+            {
+                ...reflection,
+                id: Date.now(),
+                timestamp: 'Just now'
+            },
+            ...prev
+        ]);
     };
 
     const canAccess = (feature) => {
@@ -65,8 +76,10 @@ export const AuthProvider = ({ children }) => {
     const value = {
         user,
         loading,
+        reflections,
         login,
         logout,
+        addReflection,
         canAccess,
         ROLES
     };

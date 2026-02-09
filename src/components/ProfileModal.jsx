@@ -74,7 +74,7 @@ const ProfileModal = ({ user, onClose }) => {
                     </div>
                     <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.25rem' }}>{user.name}</h2>
                     <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', fontFamily: 'monospace' }}>
-                        Explorer Code: {user.shareCode}
+                        Enginuity ID: {user.shareCode}
                     </div>
                 </div>
 

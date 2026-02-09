@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+const API_KEY = "AIzaSyBeBvCJo_7FhDyOnr6j01uctooHnGBXdFc";
 
 // Initialize the API only if key exists
 const genAI = API_KEY ? new GoogleGenerativeAI(API_KEY) : null;
@@ -117,6 +117,129 @@ export const GeminiService = {
                 console.error("GeminiService: All models failed for curation.", fallbackError.message);
                 throw fallbackError;
             }
+        }
+    },
+
+    /**
+     * Generates 3 mini-articles (TLDRs) for a specific subtopic
+     */
+    generateMiniArticles: async (topic, subtopic) => {
+        if (!GeminiService.isAvailable()) {
+            throw new Error("API_KEY_MISSING");
+        }
+
+        const prompt = `
+        You are an expert educator for middle school students.
+        Create 3 "TLDR" style micro-learning cards about the subtopic "${subtopic}" within the field of "${topic}".
+        
+        Format the output as a JSON array of objects with this structure:
+        [
+            {
+                "id": 1,
+                "title": "Catchy Title",
+                "summary": "Two sentence easy-to-understand summary.",
+                "funFact": "A surprising fact related to this."
+            }
+        ]
+
+        Make the content engaging, factual, and safe.
+        RETURN ONLY THE JSON ARRAY. NO MARKDOWN BLOCK.
+        `;
+
+        try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text();
+
+            // Clean markdown if present
+            const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            return JSON.parse(cleanText);
+        } catch (error) {
+            console.error("GeminiService: Article generation failed", error);
+            throw error;
+        }
+    },
+
+    /**
+     * Find events for a topic
+     */
+    findEvents: async (topic, subtopic) => {
+        if (!GeminiService.isAvailable()) {
+            throw new Error("API_KEY_MISSING");
+        }
+
+        const prompt = `
+        Find 2 real or realistic upcoming educational events, webinars, or challenges for a middle school student interested in "${subtopic}" (${topic}).
+        Sources can be NASA, Smithsonian, National Geographic, DevPost, Eventbrite, or major Museums.
+        
+        Return JSON array:
+        [
+            {
+                "title": "Event Title",
+                "startTime": "YYYY-MM-DDTHH:MM:00Z" (Must be future date within next 30 days),
+                "endTime": "YYYY-MM-DDTHH:MM:00Z",
+                "location": "Online or City, Country",
+                "eligibility": "Age range or 'Open to all'",
+                "source": "Source Name",
+                "link": "https://...",
+                "description": "Brief description."
+            }
+        ]
+        RETURN ONLY JSON.
+        `;
+
+        try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text();
+
+            const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            const events = JSON.parse(cleanText);
+
+            // Post-process to ensure IDs and InterestID match
+            return events.map(e => ({
+                ...e,
+                id: 'gen_' + Math.random().toString(36).substr(2, 9),
+                interestId: topic, // We match the parent topic ID roughly
+                subtopic: subtopic
+            }));
+
+        } catch (error) {
+            console.error("GeminiService: Event finding failed", error);
+            throw error;
+        }
+    },
+
+    /**
+     * Expand taxonomy with new subtopics
+     */
+    expandTaxonomy: async (interestId, currentSubtopics) => {
+        if (!GeminiService.isAvailable()) {
+            throw new Error("API_KEY_MISSING");
+        }
+
+        const prompt = `
+        You are an expert curriculum designer.
+        Generate 10 NEW, unique, and exciting subtopics for the interest area "${interestId}" that are NOT in this list: ${JSON.stringify(currentSubtopics)}.
+        Focus on "deep cuts" or advanced/fun niche topics suitable for curious middle schoolers.
+        
+        Return JSON array of strings:
+        ["Topic 1", "Topic 2", ...]
+        `;
+
+        try {
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const text = response.text();
+
+            const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            return JSON.parse(cleanText);
+        } catch (error) {
+            console.error("GeminiService: Taxonomy expansion failed", error);
+            throw error;
         }
     }
 };

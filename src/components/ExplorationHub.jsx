@@ -3,12 +3,22 @@ import { INTERESTS } from '../data/interests';
 import { getHubContent } from '../data/hubContent';
 import { ContentService } from '../services/contentService';
 import { CurationAgent } from '../agent/curationAgent';
-import { BookOpen, Zap, Eye, MessageSquare, Sparkles, CheckCircle, Info } from 'lucide-react';
+import { MentorService } from '../services/mentorService';
+import { BookOpen, Zap, Eye, MessageSquare, Sparkles, CheckCircle, Info, BadgeCheck } from 'lucide-react';
 
-const ExplorationHub = ({ selectedIds }) => {
+const ExplorationHub = ({ selectedIds, onExploreMentors, onExploreLearn, onExploreEvents, onExploreTry }) => {
     // Select the first one by default
     const [activeInterestId, setActiveInterestId] = useState(selectedIds[0]);
+
+    // Ensure activeInterestId is set if selectedIds loads later
+    useEffect(() => {
+        if (!activeInterestId && selectedIds.length > 0) {
+            setActiveInterestId(selectedIds[0]);
+        }
+    }, [selectedIds, activeInterestId]);
+
     const [aiContent, setAiContent] = useState(null);
+    const [realMentors, setRealMentors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showProof, setShowProof] = useState(false);
 
@@ -20,12 +30,17 @@ const ExplorationHub = ({ selectedIds }) => {
         const fetchContent = async () => {
             setLoading(true);
             setAiContent(null); // Clear previous content
+            setRealMentors([]);
             setShowProof(false);
 
             console.log(`ExplorationHub: Fetching live curation for ${activeInterestId}...`);
             try {
                 const data = await CurationAgent.ask(activeInterestId);
                 setAiContent(data);
+
+                // Fetch Real Mentors
+                const mentors = MentorService.getMentorsByInterest(activeInterestId);
+                setRealMentors(mentors);
             } catch (err) {
                 console.error("ExplorationHub: CurationAgent failed", err);
             } finally {
@@ -39,14 +54,20 @@ const ExplorationHub = ({ selectedIds }) => {
 
     return (
         <div style={{ animation: 'fadeIn 0.8s ease-out' }}>
-            {/* Interest Tabs */}
+            {/* Interest Tabs - Sticky for Modern UX */}
             <div style={{
                 display: 'flex',
                 gap: '1rem',
                 overflowX: 'auto',
-                paddingBottom: '1rem',
-                marginTop: '-1rem',
-                marginBottom: '2rem'
+                padding: '1rem',
+                margin: '-1.5rem -1rem 2rem -1rem',
+                position: 'sticky',
+                top: '-1px', // Accounts for container padding
+                background: 'rgba(255, 255, 255, 0.8)',
+                backdropFilter: 'blur(10px)',
+                zIndex: 100,
+                borderBottom: '1px solid rgba(0,0,0,0.05)',
+                scrollbarWidth: 'none'
             }}>
                 {selectedIds.map(id => {
                     const interest = INTERESTS.find(i => i.id === id);
@@ -79,27 +100,53 @@ const ExplorationHub = ({ selectedIds }) => {
                 })}
             </div>
 
+            {/* Longitudinal Journey Indicator */}
+            <div style={{
+                marginBottom: '2rem',
+                background: 'var(--bg-card)',
+                padding: '1rem',
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--border-color)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1.5rem'
+            }}>
+                <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.85rem' }}>
+                        <span style={{ fontWeight: 700, color: 'var(--text-muted)' }}>Longitudinal Exposure Journey</span>
+                        <span style={{ color: '#4D96FF', fontWeight: 800 }}>Phase 1: Exploration</span>
+                    </div>
+                    <div style={{ height: '8px', background: 'var(--bg-secondary)', borderRadius: '4px', overflow: 'hidden' }}>
+                        <div style={{ width: '35%', height: '100%', background: 'var(--gradient-main)' }}></div>
+                    </div>
+                </div>
+                <div style={{ textAlign: 'center', padding: '0 1rem', borderLeft: '1px solid var(--border-color)' }}>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 800 }}>12</div>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Sparks Found</div>
+                </div>
+            </div>
+
             {/* AI Trust Banner & Verification Proof */}
             {aiContent && !loading && (
                 <div style={{ marginBottom: '2rem' }}>
                     <div style={{
-                        background: 'linear-gradient(to right, #eef2ff, #f5f3ff)',
-                        border: '1px solid #c7d2fe',
+                        background: 'linear-gradient(to right, #f0fdf4, #ecfdf5)',
+                        border: '1px solid #b7e4c7',
                         borderRadius: 'var(--radius-md)',
                         padding: '0.75rem 1rem',
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.75rem',
                         fontSize: '0.9rem',
-                        color: '#4338ca',
+                        color: '#166534',
                         cursor: 'pointer'
                     }} onClick={() => setShowProof(!showProof)}>
-                        <Sparkles size={16} fill="#4338ca" />
-                        <span style={{ fontWeight: 600 }}>AI Agent Curation:</span>
-                        <span>Content for <strong>{activeInterest.title}</strong> was validated on <strong>{aiContent.lastUpdated}</strong> by {aiContent.sourceType}.</span>
+                        <Sparkles size={16} fill="#166534" />
+                        <span style={{ fontWeight: 600 }}>Equity-First AI Curation:</span>
+                        <span>Personalized for <strong>{activeInterest.title}</strong>. Sourced from globally accessible, zero-cost opportunities.</span>
                         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', fontWeight: 600, textDecoration: 'underline' }}>
                             <CheckCircle size={16} />
-                            {showProof ? 'Hide Proof' : 'View Proof'}
+                            {showProof ? 'Hide Logic' : 'How we vet'}
                         </div>
                     </div>
 
@@ -139,15 +186,23 @@ const ExplorationHub = ({ selectedIds }) => {
             }}>
                 {/* KNOWLEDGE Pillar */}
                 <PillarCard
-                    title="Knowledge"
+                    title="Learn"
                     subtitle="Build understanding"
                     icon={BookOpen}
                     color="#4CC9F0"
                     isLoading={loading}
                     badge={aiContent?._source === 'LIVE_AGENT' ? 'AI Validated' : 'Offline'}
+                    onClick={() => onExploreLearn && onExploreLearn(activeInterestId)}
                 >
                     {loading ? <p>Researching vetted sources...</p> : (
                         <>
+                            {realMentors.length > 0 && (
+                                <div style={{ marginBottom: '1rem', background: 'rgba(255,255,255,0.8)', padding: '0.5rem', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid #4361EE' }}>
+                                    <div style={{ fontSize: '0.8rem', color: '#4361EE', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                                        <BadgeCheck size={14} /> {realMentors.length} Verified Mentor{realMentors.length > 1 ? 's' : ''} Available!
+                                    </div>
+                                </div>
+                            )}
                             <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', fontWeight: 700 }}>{aiContent.knowledge?.title || 'Overview'}</h4>
                             <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginBottom: '1rem', lineHeight: 1.5 }}>
                                 {aiContent.knowledge?.summary || 'Information loading...'}
@@ -163,12 +218,13 @@ const ExplorationHub = ({ selectedIds }) => {
 
                 {/* EVENTS Pillar */}
                 <PillarCard
-                    title="Events"
+                    title="Explore"
                     subtitle="Build belief"
                     icon={Eye}
                     color="#7209B7"
                     isLoading={loading}
                     badge={aiContent?.events ? 'Live' : null}
+                    onClick={() => onExploreEvents && onExploreEvents(activeInterestId)}
                 >
                     {loading ? <p>Looking for webinars & exhibits...</p> : aiContent.events ? (
                         <>
@@ -183,12 +239,13 @@ const ExplorationHub = ({ selectedIds }) => {
 
                 {/* MENTORS Pillar */}
                 <PillarCard
-                    title="Mentors"
+                    title="Connect"
                     subtitle="Get guidance"
                     icon={MessageSquare}
                     color="#4361EE"
                     isLoading={loading}
                     badge={aiContent?.mentors ? 'Experts' : null}
+                    onClick={() => onExploreMentors && onExploreMentors(activeInterestId)}
                 >
                     {loading ? <p>Connecting with experts...</p> : aiContent.mentors ? (
                         <>
@@ -198,17 +255,30 @@ const ExplorationHub = ({ selectedIds }) => {
                                 Focus: {aiContent.mentors.expertise}
                             </div>
                         </>
-                    ) : <p style={{ color: 'var(--text-muted)' }}>Searching for role models...</p>}
+                    ) : (realMentors.length > 0 ? (
+                        <>
+                            <h4 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Connect with Experts</h4>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                {realMentors.map(mentor => (
+                                    <div key={mentor.id} style={{ background: 'rgba(255,255,255,0.6)', padding: '0.75rem', borderRadius: '8px' }}>
+                                        <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>{mentor.name}</div>
+                                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{mentor.accreditations}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    ) : <p style={{ color: 'var(--text-muted)' }}>Searching for role models...</p>)}
                 </PillarCard>
 
                 {/* EXPERIMENTS Pillar */}
                 <PillarCard
-                    title="Experiments"
+                    title="Try"
                     subtitle="Take action"
                     icon={Zap}
                     color="#F72585"
                     isLoading={loading}
                     badge={aiContent?.experiments ? 'Safe' : null}
+                    onClick={() => onExploreTry && onExploreTry(activeInterestId)}
                 >
                     {loading ? <p>Designing safety-first experiments...</p> : aiContent.experiments ? (
                         <>
@@ -227,18 +297,20 @@ const ExplorationHub = ({ selectedIds }) => {
     );
 };
 
-const PillarCard = ({ title, subtitle, icon: Icon, color, content, children, isLoading, badge }) => (
-    <div className="hover-lift" style={{
-        background: 'var(--bg-card)',
-        borderRadius: 'var(--radius-lg)',
-        overflow: 'hidden',
-        transition: 'transform 0.3s',
-        cursor: 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        position: 'relative'
-    }}>
+const PillarCard = ({ title, subtitle, icon: Icon, color, content, children, isLoading, badge, onClick }) => (
+    <div className="hover-lift"
+        onClick={onClick}
+        style={{
+            background: 'var(--bg-card)',
+            borderRadius: 'var(--radius-lg)',
+            overflow: 'hidden',
+            transition: 'transform 0.3s',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            position: 'relative'
+        }}>
         <div style={{ background: color, padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
                 <h3 style={{ color: 'white', fontSize: '1.25rem' }}>{title}</h3>
