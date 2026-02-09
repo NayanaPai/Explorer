@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# Enginuity: Expanding Beyond Your Horizon 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Enginuity** is a longitudinal exploration platform designed to bridge the gap between curiosity and structured pursuit. Built on the belief that guidance-based growth shouldn't be reserved for elite athletes, Enginuity provides every learner with a "coach-centered" path to discovering their potential.
 
-Currently, two official plugins are available:
+## 🎬 Cinematic Demo (2.7 Minutes)
+Watch our professional narrated walkthrough to see Enginuity's vision in action—featuring our **Equity-First AI Curation**, **Selection Dock**, and the **Student-Teacher Feedback Loop**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Enginuity Professional Pitch Demo](./public/demo/enginuity-demo.webm)
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🌟 The Enginuity Vision
 
-## Expanding the ESLint configuration
+### 1. Longitudinal Growth
+Curiosity isn't a one-off event. Enginuity tracks a student's interests over years, providing a "Longitudinal Exposure Journey" that moves from initial sparks to deep, structured mastery.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 2. Equity-First Curation
+We believe that no "Spark" should be gated by socio-economic status. Our AI curation engine prioritizes globally accessible, zero-cost opportunities—turning the open web into a level playing field for every child.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 3. Structured Guidance (Teacher & Parent Portal)
+Adults are "Coaches," not just monitors. Our portal provides parents and teachers with the **"Aha! Moment"** insights they need to bridge digital exploration to real-world conversation and classroom action.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🛠️ Platform Details
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Core Pillars
+- **Learn Page**: Interactive content mining that turns interest sub-topics into accessible learning paths.
+- **Explore & Try**: Connecting students to local events, verified mentors, and hands-on experiments.
+- **Selection Dock**: A modern, glassmorphic UI that visually celebrates the student's journey of discovery.
+- **Community Loop**: Real-time transmission of student reflections to their guidance providers.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Technology Stack
+- **Frontend**: React 19, Vite, Lucide Icons
+- **AI Engine**: Google Gemini API (Content Sourcing & Recommendation)
+- **Styling**: Vanilla CSS (Premium Glassmorphic Design System)
+- **Demo Engine**: Playwright (Cinematic Narrated Flows)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+## 🚀 Getting Started
+
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
+
+3. **Experience the Demo**:
+   Launch the automated narrated presentation to see the "Golden Path":
+   ```bash
+   npm run demo
+   ```
+
+---
+**Enginuity** - *Turning curiosity into lifelong skills.*

@@ -1,7 +1,8 @@
 {
   "name": "enginuity-platform",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Enginuity: A longitudinal exploration platform for equity-first interest discovery and structured guidance.",
   "type": "module",
   "scripts": {
     "dev": "vite",
